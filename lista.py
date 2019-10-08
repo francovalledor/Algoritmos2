@@ -66,22 +66,42 @@ class Lista:
 
         self.tamanio += 1
 
-    def localiza(self, elemento):
+    def localiza(self, valor, start=None, stop=None)->int:
         """
         Devuelve la posicion de la priera aparición de "elemento" en la lista.
         Lanza exepción ValueError si elm elemento no está en la lista
         """
-        actual = self.frente
-        posicion = -1
+        if start == None:
+            start = 0
+        elif start < 0:
+            start = len(self) + start
+            if start < 0:
+                start = 0
+        elif start > 0:
+            start = len(self)
 
-        while not (actual.siguiente == None):
-            if actual.data == elemento:
-                break
-            posicion += 1
-            actual = actual.siguiente
+        if stop == None:
+            stop = len(self)
+        elif stop < 0:
+            stop = len(self) + stop
+        elif stop > len(self):
+            stop = len(self)
+        
+        posicion = start
+        if posicion < stop:    
+            actual = self.__get_nodo(posicion)
+            while posicion<stop:
+                if actual.data == valor:
+                    break
+                else:
+                    actual = actual.siguiente
+                    posicion += 1
+            else:
+                raise self.ELEMENTO_NO_ENCONTRADO
+
         else:
             raise self.ELEMENTO_NO_ENCONTRADO
-
+        
         return posicion
 
     def recupera(self, posicion):
@@ -117,10 +137,6 @@ class Lista:
         self.tamanio = 0
         self.frente.siguiente = None
 
-    def tamanio(self):
-        """ Devuelve la cantidad de elementos que hay en la lista """
-        return len(self)
-
     def copia(self):
         """ Devuelve una copia de la lista"""
         copia = Lista()
@@ -146,64 +162,74 @@ class Lista:
             self=self, strElementos=strElementos)
         return representacion
 
+    def __regla_slice(self, posicion:slice) -> (int, int, int):
+        paso = 1
+        inicio = posicion.start
+        fin = posicion.stop
+        if posicion.step:
+            if type(posicion.step) == int and posicion.step > 0:
+                paso = posicion.step
+            else:
+                raise ValueError('"step" debe ser de tipo "int"')
+
+        if posicion.start == None:
+            inicio = 0
+        elif posicion.start < 0:
+            inicio = len(self)+posicion.start
+            if inicio < 0:
+                inicio = 0
+        elif inicio > len(self):
+            inicio = len(self)
+
+        if posicion.stop == None:
+            fin = len(self)
+        elif posicion.stop < 0:
+            fin = len(self)+posicion.stop
+            if fin < 0:
+                fin = 0
+        elif posicion.stop > len(self):
+            fin = len(self)
+
+        return (inicio, paso, fin)
+    
     def __getitem__(self, posicion):
         """x.__getitem__(y) <==> x[y]"""
         if type(posicion) == slice:
-            paso = 1
-            inicio = posicion.start
-            fin = posicion.stop
-            if posicion.step:
-                if type(posicion.step) == int and posicion.step > 0:
-                    paso = posicion.step
-                else:
-                    raise ValueError('"step" debe ser de tipo "int"')
-
-            if posicion.start == None:
-                inicio = 0
-            elif posicion.start < 0:
-                inicio = len(self)+posicion.start
-
-            if posicion.stop == None:
-                fin = len(self)
-            elif posicion.stop < 0:
-                fin = len(self)+posicion.stop
-
+            (inicio, paso, fin) = self.__regla_slice(posicion)
+            
             sublista = Lista()
             i = inicio
-            while i < fin:
-                sublista.inserta(self.recupera(i))
-                i += paso
+            if i < fin:
+                actual = self.__get_nodo(i)
+                while i < fin:
+                    sublista.inserta(actual.data)
+                    actual = actual.siguiente
+                    i += paso
             return sublista
-
-        else:
+        
+        elif type(posicion) == int:
             if posicion < 0:
                 posicion = len(self)+posicion
             return self.recupera(posicion)
+        else:
+            raise TypeError('el indice debe ser "int" o "slice", no %s'%str(type(posicion)))
 
     def __setitem__(self, posicion, valor):
         if type(posicion) == slice:
-            paso = 1
-            inicio = posicion.start
-            fin = posicion.stop
-            if posicion.step:
-                if type(posicion.step) == int and posicion.step > 0:
-                    paso = posicion.step
-                else:
-                    raise ValueError('"step" debe ser de tipo "int"')
-
-            if posicion.start < 0:
-                inicio = len(self)+posicion.start
-
-            if posicion.stop < 0:
-                fin = len(self)+posicion.stop
+            (inicio, paso, fin) = self.__regla_slice(posicion)
 
             i = inicio
-            while i < fin:
-                self.modifica(i, valor)
-                i += paso
+            if i < fin:
+                actual = self.__get_nodo(i)
+                while i < fin:
+                    actual.data = valor
+                    actual = actual.siguiente
+                    i += paso
 
-        else:
+        elif type(posicion) == int:
             self.modifica(posicion, valor)
+        else:
+            raise TypeError('el indice debe ser "int" o "slice", no %s'%type(posicion))
 
     def __delitem__(self, posicion):
         """Delete self[key]."""
@@ -332,13 +358,7 @@ class Lista:
         Return first index of value.
         Raises ValueError if the value is not present.
         """
-        if start == None:
-            start = 0
-        if stop == None:
-            stop = len(self)
-        aux = self[start:stop]
-        print(aux)
-        return start + aux.localiza(valor)
+        return self.localiza(valor, start, stop)
 
     # ITERATOR
     def __iter__(self):
@@ -354,9 +374,8 @@ class Lista:
             return retorno
 
 
-a = Lista(1,2,3,4,5,2)
-b = Lista(6,7,8,9)
+a = Lista(1,2,3,4,5,6,7,8)
 
-print(a.index(2, start=3))
+#a.index(10, -100)
 
 print(a)

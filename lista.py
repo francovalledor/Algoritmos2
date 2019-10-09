@@ -25,7 +25,7 @@ class Lista:
         self.__ultimo__ = self.frente
 
         for elemento in elementos:
-            self.inserta(elemento)
+            self.insert(elemento)
 
     def __len__(self):
         """Return len(self)."""
@@ -40,7 +40,7 @@ class Lista:
                 actual = actual.siguiente
             return actual
 
-    def inserta(self, elemento, posicion=None):
+    def insert(self, elemento, posicion=None):
         """
         Inserta el elemento "elemento" en la posicion "posicion" pasando los 
         elementos de "posicion" y posteriores un casillero hacia adelante
@@ -125,30 +125,24 @@ class Lista:
             raise self.POSICION_NO_VALIDA
         anterior.siguiente = anterior.siguiente.siguiente
         self.tamanio -= 1
+    
 
     def modifica(self, posicion, valor):
         """ Modifica el valor de un elemento"""
         self.__get_nodo(posicion).data = valor
 
-    def anula(self):
-        """
-        Convierte la lista en una lista vacía
-        """
-        self.tamanio = 0
-        self.frente.siguiente = None
-
-    def copia(self):
+    def copy(self):
         """ Devuelve una copia de la lista"""
         copia = Lista()
         for elemento in self:
-            copia.inserta(elemento)
+            copia.insert(elemento)
         return copia
 
-    def reversa(self):
+    def reverse(self):
         """ Devuelve una copia de la lista en orden inverso"""
         nueva_lista = Lista()
         for elemento in self:
-            nueva_lista.inserta(elemento, 0)
+            nueva_lista.insert(elemento, 0)
         return nueva_lista
 
     def __repr__(self) -> str:
@@ -202,7 +196,7 @@ class Lista:
             if i < fin:
                 actual = self.__get_nodo(i)
                 while i < fin:
-                    sublista.inserta(actual.data)
+                    sublista.insert(actual.data)
                     actual = actual.siguiente
                     i += paso
             return sublista
@@ -239,9 +233,9 @@ class Lista:
     def __add__(self, otra):
         """Return self+value"""
         if type(otra) == type(self):
-            suma = self.copia()
+            suma = self.copy()
             for elemento in otra:
-                suma.inserta(elemento)
+                suma.insert(elemento)
             return suma
         else:
             raise TypeError('No se pueden sumar %s y %s' %
@@ -293,7 +287,7 @@ class Lista:
         """Implement self+=value."""
         if (type(otra) == type(self)):
             for elemento in otra:
-                self.inserta(elemento)
+                self.insert(elemento)
         else:
             raise TypeError('Solo se puede sumar a otro %s'%(type(self)))
         return self
@@ -301,13 +295,7 @@ class Lista:
 
     def __imul__(self, entero):
         """Implement self*=value."""
-        if type(entero) != int:
-            raise TypeError('La Lista solo se puede multiplicar por un entero')
-        else:
-            aux = Lista()
-            for i in range(0, entero):
-                aux += self.copia()
-        return aux
+        return self.__mul__(entero)
 
     def __le__(self, otra):
         """Return self<=value."""
@@ -315,7 +303,13 @@ class Lista:
     
     def __mul__(self, entero):
         """Return self*value."""
-        return self.__imul__(entero)
+        if type(entero) != int:
+            raise TypeError('La Lista solo se puede multiplicar por un entero')
+        else:
+            aux = Lista()
+            for i in range(0, entero):
+                aux += self.copy()
+        return aux
 
     def __ne__(self, otra):
         """Return self!=value."""
@@ -327,15 +321,11 @@ class Lista:
 
     def append(self, elemento):
         """Append object to the end of the list."""
-        return self.inserta(elemento)
+        return self.insert(elemento)
 
     def clear(self):
         """Remove all items from list."""
         self.__init__()
-
-    def copy(self):
-        """Return a shallow copy of the list."""
-        return self.copia()
 
     def count(self, valor):
         """Return number of occurrences of value."""
@@ -346,11 +336,11 @@ class Lista:
         
         return contador
 
-    
+
     def extend(self, objeto_iterable):
         """Extend list by appending elements from the iterable."""
         for elemento in objeto_iterable:
-            self.inserta(elemento)                
+            self.insert(elemento)                
 
 
     def index(self, valor, start=None, stop=None):
@@ -370,12 +360,56 @@ class Lista:
             raise StopIteration
         else:
             self._iter_actual = self._iter_actual.siguiente
-            retorno = self._iter_actual.data
-            return retorno
+            return self._iter_actual.data
+
+    def pop(self, index=-1):
+        """
+        Remove and return item at index (default last).
+        Raises IndexError if list is empty or index is out of range.
+        """
+        if index < 0:
+            index = index + len(self)
+
+        elemento = self.recupera(index)
+        self.suprime(index)
+        return elemento
 
 
-a = Lista(1,2,3,4,5,6,7,8)
+    def remove(self, valor):
+        """
+        Elimina la primer ocurrencia de "valor"
+        Lanza ValueError si el valor no se encuentra en la lista
+        """         
+        anterior = self.frente
+        actual = anterior.siguiente
+        while True:
+            if actual.data == valor:
+                anterior.siguiente = anterior.siguiente.siguiente
+                self.tamanio -= 1
+                break
+            elif actual.siguiente == None:
+                raise self.ELEMENTO_NO_ENCONTRADO
+            else:
+                anterior = actual
+                actual = actual.siguiente
 
-#a.index(10, -100)
-
-print(a)
+    def sort(self, reverse=False):
+        """
+        
+        """        
+        if len(self)>1:
+            hubo_cambios = True
+            while hubo_cambios:
+                hubo_cambios = False
+                i = 1
+                actual = self.frente.siguiente
+                siguiente = actual.siguiente
+                while i < len(self):
+                    if actual.data > siguiente.data:
+                        aux = actual.data
+                        actual.data = siguiente.data
+                        siguiente.data = aux
+                        hubo_cambios = True
+                    i += 1
+                    actual = siguiente
+                    siguiente = siguiente.siguiente

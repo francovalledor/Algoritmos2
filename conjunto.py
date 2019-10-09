@@ -277,8 +277,3 @@ class Conjunto:
         Return value^=self.
         """
         return self.__xor__(otro)
-
-
-con = Conjunto(1, 2, 3, 4, 5)
-con2 = Conjunto(4, 5, 6, 7, 'd')
-con.symmetric_difference_update(con2)

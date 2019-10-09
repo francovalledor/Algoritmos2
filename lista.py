@@ -66,7 +66,7 @@ class Lista:
 
         self.tamanio += 1
 
-    def localiza(self, valor, start=None, stop=None)->int:
+    def localiza(self, valor, start=None, stop=None) -> int:
         """
         Devuelve la posicion de la priera aparición de "elemento" en la lista.
         Lanza exepción ValueError si elm elemento no está en la lista
@@ -86,11 +86,11 @@ class Lista:
             stop = len(self) + stop
         elif stop > len(self):
             stop = len(self)
-        
+
         posicion = start
-        if posicion < stop:    
+        if posicion < stop:
             actual = self.__get_nodo(posicion)
-            while posicion<stop:
+            while posicion < stop:
                 if actual.data == valor:
                     break
                 else:
@@ -101,7 +101,7 @@ class Lista:
 
         else:
             raise self.ELEMENTO_NO_ENCONTRADO
-        
+
         return posicion
 
     def recupera(self, posicion):
@@ -125,7 +125,6 @@ class Lista:
             raise self.POSICION_NO_VALIDA
         anterior.siguiente = anterior.siguiente.siguiente
         self.tamanio -= 1
-    
 
     def modifica(self, posicion, valor):
         """ Modifica el valor de un elemento"""
@@ -156,7 +155,7 @@ class Lista:
             self=self, strElementos=strElementos)
         return representacion
 
-    def __regla_slice(self, posicion:slice) -> (int, int, int):
+    def __regla_slice(self, posicion: slice) -> (int, int, int):
         paso = 1
         inicio = posicion.start
         fin = posicion.stop
@@ -185,12 +184,12 @@ class Lista:
             fin = len(self)
 
         return (inicio, paso, fin)
-    
+
     def __getitem__(self, posicion):
         """x.__getitem__(y) <==> x[y]"""
         if type(posicion) == slice:
             (inicio, paso, fin) = self.__regla_slice(posicion)
-            
+
             sublista = Lista()
             i = inicio
             if i < fin:
@@ -200,13 +199,14 @@ class Lista:
                     actual = actual.siguiente
                     i += paso
             return sublista
-        
+
         elif type(posicion) == int:
             if posicion < 0:
                 posicion = len(self)+posicion
             return self.recupera(posicion)
         else:
-            raise TypeError('el indice debe ser "int" o "slice", no %s'%str(type(posicion)))
+            raise TypeError(
+                'el indice debe ser "int" o "slice", no %s' % str(type(posicion)))
 
     def __setitem__(self, posicion, valor):
         if type(posicion) == slice:
@@ -223,12 +223,12 @@ class Lista:
         elif type(posicion) == int:
             self.modifica(posicion, valor)
         else:
-            raise TypeError('el indice debe ser "int" o "slice", no %s'%type(posicion))
+            raise TypeError(
+                'el indice debe ser "int" o "slice", no %s' % type(posicion))
 
     def __delitem__(self, posicion):
         """Delete self[key]."""
         self.suprime(posicion)
-
 
     def __add__(self, otra):
         """Return self+value"""
@@ -240,7 +240,6 @@ class Lista:
         else:
             raise TypeError('No se pueden sumar %s y %s' %
                             (type(self), type(otra)))
-
 
     def __contains__(self, valor):
         """Return key in self."""
@@ -265,23 +264,20 @@ class Lista:
 
         return es_igual
 
-
     def __gt__(self, otra):
         """Return self>value."""
         es_mayor = False
         if (type(otra) == type(self)) and (len(self) > len(otra)):
             es_mayor = True
             for i in range(0, len(otra)):
-                    if self[i] != otra[i]:
-                        es_mayor = False
-                        break
+                if self[i] != otra[i]:
+                    es_mayor = False
+                    break
         return es_mayor
 
-    
     def __ge__(self, otra):
         """Return self>=value."""
         return (self.__gt__(otra) or self.__eq__(otra))
-
 
     def __iadd__(self, otra):
         """Implement self+=value."""
@@ -289,9 +285,8 @@ class Lista:
             for elemento in otra:
                 self.insert(elemento)
         else:
-            raise TypeError('Solo se puede sumar a otro %s'%(type(self)))
+            raise TypeError('Solo se puede sumar a otro %s' % (type(self)))
         return self
-
 
     def __imul__(self, entero):
         """Implement self*=value."""
@@ -300,7 +295,7 @@ class Lista:
     def __le__(self, otra):
         """Return self<=value."""
         return otra > self
-    
+
     def __mul__(self, entero):
         """Return self*value."""
         if type(entero) != int:
@@ -314,7 +309,7 @@ class Lista:
     def __ne__(self, otra):
         """Return self!=value."""
         return not (self == otra)
-    
+
     def __rmul__(self, entero):
         """Return entero*self."""
         return self*entero
@@ -333,15 +328,13 @@ class Lista:
         for elemento in self:
             if elemento == valor:
                 contador += 1
-        
-        return contador
 
+        return contador
 
     def extend(self, objeto_iterable):
         """Extend list by appending elements from the iterable."""
         for elemento in objeto_iterable:
-            self.insert(elemento)                
-
+            self.insert(elemento)
 
     def index(self, valor, start=None, stop=None):
         """
@@ -374,12 +367,11 @@ class Lista:
         self.suprime(index)
         return elemento
 
-
     def remove(self, valor):
         """
         Elimina la primer ocurrencia de "valor"
         Lanza ValueError si el valor no se encuentra en la lista
-        """         
+        """
         anterior = self.frente
         actual = anterior.siguiente
         while True:
@@ -395,9 +387,9 @@ class Lista:
 
     def sort(self, reverse=False):
         """
-        
-        """        
-        if len(self)>1:
+
+        """
+        if len(self) > 1:
             hubo_cambios = True
             while hubo_cambios:
                 hubo_cambios = False

@@ -1,5 +1,6 @@
 from lista import Lista
 
+
 class Conjunto:
     def __init__(self, *valores):
         self.__elementos = Lista()
@@ -131,7 +132,6 @@ class Conjunto:
                 diferencia.add(elemento)
         return diferencia
 
-
     def symmetric_difference_update(self, otro):
         """
         Return the symmetric difference of two sets as a new set.
@@ -180,7 +180,7 @@ class Conjunto:
         """ return self | otro """
         return self.union(otro)
 
-    def __ror__(self, otro): 
+    def __ror__(self, otro):
         """ return otro | self """
         return self.__or__(otro)
 
@@ -207,14 +207,12 @@ class Conjunto:
         """Iterator (para bucle "for in")"""
         return iter(self.__elementos)
 
-
     def issubset(self, otro):
         """
         Report whether another set contains this set.
         """
         self.__igual_tipo(otro)
         return (self - otro).is_empty()
-
 
     def issuperset(self, otro):
         """
@@ -223,10 +221,9 @@ class Conjunto:
         self.__igual_tipo(otro)
         return (otro - self).is_empty()
 
-    
     def is_empty(self):
         return (len(self) == 0)
-    
+
     def isdisjoint(self, otro):
         """
         Return True if two sets have a null intersection.
@@ -237,13 +234,11 @@ class Conjunto:
         """Remove all elements from this set."""
         self.__init__()
 
-    
     def copy(self):
         """
         Return a shallow copy of a set.
         """
         return self.union(Conjunto())
-
 
     def pop(self):
         """
@@ -257,7 +252,6 @@ class Conjunto:
             del self.__elementos[0]
             return a
 
-
     def update(self, *iterables):
         """
         Update a set with the union of itself and others
@@ -265,7 +259,6 @@ class Conjunto:
         for grupo in iterables:
             for elemento in grupo:
                 self.add(elemento)
-
 
     def __xor__(self, otro):
         """
@@ -285,6 +278,7 @@ class Conjunto:
         """
         return self.__xor__(otro)
 
-con = Conjunto(1,2,3,4,5)
-con2 = Conjunto(4,5,6,7,'d')
+
+con = Conjunto(1, 2, 3, 4, 5)
+con2 = Conjunto(4, 5, 6, 7, 'd')
 con.symmetric_difference_update(con2)

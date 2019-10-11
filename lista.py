@@ -44,12 +44,14 @@ class Lista:
         """
         Inserta el elemento "elemento" en la posicion "posicion" pasando los 
         elementos de "posicion" y posteriores un casillero hacia adelante
-
         Si se omite "posicion" el elemento es insertado al final de la lista
         """
         if posicion == None:
             posicion = len(self)
-        elif (posicion > len(self)) or posicion < 0:
+        elif posicion < 0:
+            posicion = len(self)+posicion
+        
+        if (posicion > len(self)) or posicion < 0:
             raise self.POSICION_NO_VALIDA
 
         aux = Nodo(elemento)

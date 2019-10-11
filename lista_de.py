@@ -19,11 +19,12 @@ class Lista:
 
     def __init__(self, *elementos):
         """
-        Crea una lista con los elementos pasados
+        Crea una lista doblemente enlazada con los elementos pasados
         """
         self.frente = Nodo()
         self.tamanio = 0
         self.__ultimo__ = self.frente
+        self.__previous_actual = None ##Previous iter
 
         for elemento in elementos:
             self.insert(elemento)
@@ -55,12 +56,13 @@ class Lista:
 
         Si se omite "posicion" el elemento es insertado al final de la lista
         """
-        if posicion < 0:
-            posicion = len(self)+posicion
 
         if posicion == None:
             posicion = len(self)
-        elif (posicion > len(self)) or posicion < 0:
+        elif posicion < 0:
+            posicion = len(self)+posicion
+        
+        if (posicion > len(self)) or posicion < 0:
             raise self.POSICION_NO_VALIDA
 
         aux = Nodo(elemento)
@@ -396,6 +398,18 @@ class Lista:
         else:
             self._iter_actual = self._iter_actual.siguiente
             return self._iter_actual.data
+
+    def __previous__(self):
+        if self.__previous_actual == None:
+            self.__previous_actual = self.__ultimo__
+
+        if self.__previous_actual == self.frente:
+            if self.__previous_actual = None
+            raise StopIteration
+        else:
+            retorno = self.__previous_actual.data
+            self.__previous_actual = self.__previous_actual.anterior
+            return retorno
 
     def pop(self, index=-1):
         """

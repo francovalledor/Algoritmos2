@@ -1,5 +1,7 @@
 from lista import Lista
-import swapi
+from starwarsdata import personajes
+from conjunto import Conjunto
+
 
 def titulo(texto):
         print()
@@ -7,36 +9,28 @@ def titulo(texto):
         print(texto)
         print('-'*80)
 
-personajes =  Lista()
-
-##Obteniendo todos los personajes (swapi.get_all('people') aveces da error)
-for i in range(1,89):
-    try:
-        personajes.inserta(swapi.get_person(i))
-    except:
-        continue
 
 def imprimir_mujeres(personajes):
     for personaje in personajes:
         if personaje.gender == 'female':
-            print(personaje.name)
+            print(personaje)
 
 
 def listar_droides(personajes):
+    primeras_6 = Conjunto(1,2,3,4,5,6)
     for personaje in personajes:
         try:
-            especie = personaje.get_species().items[0].name 
-            if  especie == 'Droid':
-                films = personaje.get_films().items
-                primeras_6 = {1,2,3,4,5,6}
-                aparece_en = set()
-                for film in films:
-                    if film.episode_id in (1,2,3,4,5,6):
-                        aparece_en.add(film.episode_id)
-                if aparece_en == primeras_6:
-                    print(personaje.name)
+            specie = personaje.species[0]
         except:
-            pass
+            continue
+
+        if  specie == 'Droid':
+            aparece_en = Conjunto()
+            for film in personaje.films:
+                aparece_en.add(film)
+
+            if aparece_en >= primeras_6:
+                print(personaje.name)
 
 
 def mostrar_info_de(nombre):
@@ -44,117 +38,95 @@ def mostrar_info_de(nombre):
     for personaje in personajes:
         if personaje.name.upper() == nombre:
             print('NOMBRE: %s'%personaje.name)
-            print('ESPECIE: %s'%personaje.get_species().items[0].name)
-            print('PLANETA: %s'%personaje.get_homeworld().name)
+            try:
+                print('ESPECIE: %s'%personaje.species[0])
+            except:
+                pass
+            print('PLANETA: %s'%personaje.homeworld)
 
 
-def personajes_por_episodio(personajes):
-       
-    episodios = {
-    'https://swapi.co/api/films/7/' : 7 ,
-    'https://swapi.co/api/films/6/' : 6 ,
-    'https://swapi.co/api/films/5/' : 5 ,
-    'https://swapi.co/api/films/4/' : 4 , 
-    'https://swapi.co/api/films/3/' : 3 ,
-    'https://swapi.co/api/films/2/' : 2 ,
-    'https://swapi.co/api/films/1/' : 1 
-    }
-    #Para no hacer tantas peticiones ¯\_(ツ)_/¯
-
-    conjuntos = {numero:set() for (url, numero) in episodios.items()}
+def estuvieron_en_4_5_6_7(personajes):
+    cuatro_5_6_y_7 = Conjunto(4,5,6,7)
 
     for personaje in personajes:
+        estuvo_en = Conjunto()
         for film in personaje.films:
-            conjuntos[episodios[film]].add(personaje.name.upper())
-    
-    interseccion = conjuntos[7]
-    for i in (4,5,6):
-        interseccion = interseccion.intersection(conjuntos[i])
-    
-    titulo('Personajes que aparecen en 4,5,6 y 7 (en todas ellas)')
-    for nombre in interseccion:
-        print(nombre)
-    
-    en_4_5_y_6 = set().union(conjuntos[4])
-    for i in (5,6):
-        en_4_5_y_6 = en_4_5_y_6.intersection(conjuntos[i])
+            estuvo_en.add(film)
+        if estuvo_en >= cuatro_5_6_y_7:
+            print(personaje)
 
-    estuvieron_alguna_otra = set()
-    for i in (1,2,3,7):
-        estuvieron_alguna_otra = estuvieron_alguna_otra.union(conjuntos[i])
-
-    solo_en_4_5_6 = en_4_5_y_6 - estuvieron_alguna_otra
-
-    titulo('Solo estuvieron en 4, 5 y 6 (en todas ellas)')
-    for personaje in solo_en_4_5_6:
-        print(personaje)
-
+def eliminar_4_5_y_6(personajes):
+    cuatro_5_y_6 = Conjunto(4,5,6)
+    for personaje in personajes:
+        estuvo_en = Conjunto()
+        for film in personaje.films:
+            estuvo_en.add(film)
+        if estuvo_en.intersection(cuatro_5_y_6) == cuatro_5_y_6:
+            if estuvo_en.difference(cuatro_5_y_6).is_empty():
+                print('Eliminando a %s'%personaje)
 
 def humanos_de_alderaan(personajes):
-    alderaan = 'https://swapi.co/api/planets/2/'
-    humano = 'https://swapi.co/api/species/1/'
-
-    titulo('Humanos de Alderaan')
     for personaje in personajes:
         try:
-            if personaje.species[0] == humano and personaje.homeworld == alderaan:
-                print(personaje.name)
+            specie = personaje.species[0]
         except:
             continue
+
+        if specie == 'Human' and personaje.homeworld == 'Alderaan':
+            print(personaje.name)
 
 
 def altura_menor_70(personajes):
     for personaje in personajes:
         try:
-            print('algo')
-            if int(personaje.height) < 70:
-                mostrar_info_de(personaje.name)
+            es_menor_a_70  = int(personaje.height) < 70
         except:
             continue
 
+        if es_menor_a_70:
+            mostrar_info_de(personaje.name)
+
 
 def eliminar_anteultimo_elemento(lista:Lista):
-    anteultimo = lista.tamanio() - 2
-    lista.suprime(anteultimo)
-
+    print('Eliminando %s'%lista[-2])
+    del lista[-2]
 
 def en_que_episodios_aparece(nombre, personajes):
     nombre = nombre.upper()           
-    episodios = {
-    'https://swapi.co/api/films/7/' : 7 ,
-    'https://swapi.co/api/films/6/' : 6 ,
-    'https://swapi.co/api/films/5/' : 5 ,
-    'https://swapi.co/api/films/4/' : 4 , 
-    'https://swapi.co/api/films/3/' : 3 ,
-    'https://swapi.co/api/films/2/' : 2 ,
-    'https://swapi.co/api/films/1/' : 1 
-    }
-
-    conjuntos = {numero:set() for (url, numero) in episodios.items()}
     for personaje in personajes:
-        for film in personaje.films:
-            conjuntos[episodios[film]].add(personaje.name.upper())
-
-    for clave in conjuntos:
-        if nombre in conjuntos[clave]:
-            print('%s aparece en episodio %s'%(nombre, clave))
+        if personaje.name.upper() == nombre:
+            print('%s aparece en '%nombre, end='')
+            personaje.films.sort()
+            for i in range(0, len(personaje.films)-1):
+                print(personaje.films[i], end=', ')
+            print(personaje.films[-1])
 
 
 #10.a
+titulo('Mujeres')
 imprimir_mujeres(personajes)
 #10.b
+titulo('Droides de las primeras 6 pelis')
 listar_droides(personajes)
 #10.c
+titulo('Info de Darth Vader')
 mostrar_info_de('Darth Vader')
-#10.d y 10.f
-personajes_por_episodio(personajes)
-#10.e falta dato
-
+#10.d 
+titulo('Estuvieron en 4,5,6 y 7:')
+estuvieron_en_4_5_6_7(personajes)
+# #10.e falta dato
+# #10.f
+titulo('Estuvieron en 4,5 y 6 solamente:')
+eliminar_4_5_y_6(personajes)
 #10.g
+titulo('Humanos de Alderaan')
 humanos_de_alderaan(personajes)
 #10.h
+titulo('Personajes de menos de 70cm')
 altura_menor_70(personajes)
 #10.i
-#eliminar_anteultimo_elemento(lista)
+titulo('Eliminar anteúltimo nodo de la lista')
+eliminar_anteultimo_elemento(personajes)
 #10.j
+titulo('En que episodios aparece Chewbacca')
 en_que_episodios_aparece('Chewbacca', personajes)

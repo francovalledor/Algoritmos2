@@ -117,6 +117,9 @@ class Lista:
         Todas las posiciones posteriores a "posicion" son corridas a la 
         izquierda 1 casillero
         """
+        if posicion < 0:
+                posicion = len(self)+posicion
+                
         if posicion == 0:
             anterior = self.frente
         elif (posicion > 0) and (posicion < len(self)):

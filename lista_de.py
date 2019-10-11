@@ -24,7 +24,6 @@ class Lista:
         self.frente = Nodo()
         self.tamanio = 0
         self.__ultimo__ = self.frente
-        self.__previous_actual = None ##Previous iter
 
         for elemento in elementos:
             self.insert(elemento)
@@ -399,17 +398,19 @@ class Lista:
             self._iter_actual = self._iter_actual.siguiente
             return self._iter_actual.data
 
-    def __previous__(self):
-        if self.__previous_actual == None:
-            self.__previous_actual = self.__ultimo__
+    def __reversed__(self):
+        """
+        Reverse loop
+        for i in foo.reverse()
+        """
+        actual = self.__ultimo__
 
-        if self.__previous_actual == self.frente:
-            self.__previous_actual = None
-            raise StopIteration
-        else:
-            retorno = self.__previous_actual.data
-            self.__previous_actual = self.__previous_actual.anterior
-            return retorno
+        while True:
+            if actual == self.frente:
+                break
+            else:
+                yield actual.data
+                actual = actual.anterior
 
     def pop(self, index=-1):
         """
@@ -472,9 +473,4 @@ class Lista:
                     i += 1
                     actual = siguiente
                     siguiente = siguiente.siguiente
-
-
-
-a = Lista(1,2,3,4,5,6)
-a.suprime(4)
-print(a)
+                    

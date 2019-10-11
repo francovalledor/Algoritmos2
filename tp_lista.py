@@ -193,3 +193,23 @@ def ej8(cuantos_numeros):
 # print('No hay huecos en la lista')
 
 #ej12
+"""
+Desarrollar un algoritmo que permita visualizar el contenido de una lista de 
+manera ascendente y descendente de sus elementos, debe implementar lista 
+doblemente enlazada.
+"""
+from lista_de import Lista as Lde
+def visualizar_lista(lista:Lde, descendente=False):
+    lista.sort()
+    if descendente:
+        for elemento in reversed(lista):
+            print(elemento, end=' ')
+    else:
+        for elemento in lista:
+            print(elemento, end=' ')
+    print()
+
+# elementos = Lde(0,1,2,3,4,5,6,7,8)
+# visualizar_lista(elementos)
+# visualizar_lista(elementos, descendente=True)
+

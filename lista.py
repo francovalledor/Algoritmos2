@@ -231,7 +231,23 @@ class Lista:
 
     def __delitem__(self, posicion):
         """Delete self[key]."""
-        self.suprime(posicion)
+        if type(posicion) == int:
+            self.suprime(posicion)
+        elif type(posicion) == slice:
+            (inicio, paso, fin) = self.__regla_slice(posicion)
+                        
+            a_eliminar = Lista()
+            i = inicio
+            while i < fin:
+                a_eliminar.append(i)
+                i += paso
+            a_eliminar.sort(reverse=True)
+            for posicion in a_eliminar:
+                self.suprime(posicion)
+        else:
+            raise TypeError(
+                'el indice debe ser "int" o "slice", no %s' % type(posicion))
+
 
     def __add__(self, otra):
         """Return self+value"""
@@ -390,8 +406,11 @@ class Lista:
 
     def sort(self, reverse=False):
         """
-
+        Ordena la lista en orden ascendente o descentente si "reverse == True"
         """
+        def intercambiar(este, este_otro):
+            return(este_otro, este)
+
         if len(self) > 1:
             hubo_cambios = True
             while hubo_cambios:
@@ -400,11 +419,13 @@ class Lista:
                 actual = self.frente.siguiente
                 siguiente = actual.siguiente
                 while i < len(self):
-                    if actual.data > siguiente.data:
-                        aux = actual.data
-                        actual.data = siguiente.data
-                        siguiente.data = aux
+                    condicion = (reverse and (actual.data < siguiente.data))
+                    condicion = condicion or (not reverse and (actual.data > siguiente.data))
+
+                    if condicion:
+                        (actual.data, siguiente.data) = intercambiar(actual.data, siguiente.data)
                         hubo_cambios = True
+
                     i += 1
                     actual = siguiente
                     siguiente = siguiente.siguiente

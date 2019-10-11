@@ -1,4 +1,6 @@
 from lista import Lista
+from conjunto import Conjunto
+from random import randint
 
 #ej1
 def contar_cantidad_nodos(lista:Lista):
@@ -8,13 +10,13 @@ def contar_cantidad_nodos(lista:Lista):
 #ej2
 def eliminar_vocales_lista(caracteres:Lista):
     VOCALES = 'AEIOUaeiou'
-
     i = 0
     while i < len(caracteres):
         if caracteres[i] in VOCALES:
             caracteres.suprime(i)
         else:
             i += 1
+        #Existe una manera mas eficiente de hacerlo trabajando a bajo nivel
 
 #ej3
 def dividir_pares_impares(numeros_enteros: Lista):
@@ -23,14 +25,14 @@ def dividir_pares_impares(numeros_enteros: Lista):
 
     for numero in numeros_enteros:
         if numero % 2 == 0:
-            pares.inserta(numero)
+            pares.insert(numero)
         else:
-            impares.inserta(numero)
+            impares.insert(numero)
     return pares, impares
 
 #ej4
 def inserta_en_iesima(elemento, posicion, lista:Lista):
-    lista.inserta(elemento, posicion)
+    lista.insert(elemento, posicion)
 
 
 #ej5
@@ -97,7 +99,7 @@ def concatenar_listas(lista1:Lista, lista2:Lista, omitir_repetidos=False):
         lista_aux = Lista()
         while i < len(lista2):
             if lista2[i] not in lista1: 
-                lista_aux.inserta(lista2[i])
+                lista_aux.insert(lista2[i])
         concatenacion = lista1 + lista_aux 
     else: 
         concatenacion = lista1 + lista2 
@@ -138,25 +140,56 @@ def ej8(cuantos_numeros):
             if (numeros.tamanio() == 0) or (numeros.tamanio() + 1 == cuantos_numeros) :
                 continue
             elif abs(numeros.recupera(numeros.fin()-1) - siguiente) > 14:
-                numeros.inserta(siguiente)
+                numeros.insert(siguiente)
                 anterior = siguiente
                 while abs(anterior - siguiente) <= 14:
                     siguiente = generar()
-                numeros.inserta(siguiente)
+                numeros.insert(siguiente)
             else:
                 continue
         elif siguiente % 2 != 0:    #Impar no primo
             if (numeros.tamanio() == 0) or (numeros.tamanio() + 1 == cuantos_numeros) :
                 continue
             elif numeros.recupera(numeros.fin()-1) % 2 == 0:
-                numeros.inserta(siguiente)
+                numeros.insert(siguiente)
                 while siguiente % 2 != 0:
                     siguiente = generar()
-                numeros.inserta(siguiente)
+                numeros.insert(siguiente)
             else:
                 continue
         else:
-            numeros.inserta(siguiente)
+            numeros.insert(siguiente)
     return numeros
 
-#ej10
+#ej11
+# """
+# Desarrollar un algoritmo que implemente lista de archivo para realizar las siguientes
+# actividades:
+#     a. Agregar números aleatorios a la lista, no pueden estar repetidos.
+#     b. Borrar números y permitir reutilizar los huecos que quedan en el archivo.
+#     c. Realizar un barrido de la lista.
+#     d. Consultar cuantos elementos y cuantos huecos hay en la lista.
+# """
+# numeros = Lista()
+# #a
+# for i in range(0,100):
+#     while True:
+#         numero_aleatorio = random.randint(0,1000)
+#         if numero_aleatorio not in numeros:
+#             numeros.insert(numero_aleatorio)
+#             break
+
+# #b
+# for i in range(1,10):
+#     posicion_aleatoria = random.randint(0,len(numeros))
+#     del numeros[posicion_aleatoria]
+
+# #c
+# for numero in numeros:
+#     print(numero)
+
+# #d
+# print('hay %d elementos en la lista'%len(numeros))
+# print('No hay huecos en la lista')
+
+#ej12

@@ -1,6 +1,5 @@
 from lista import Lista
 
-
 class Conjunto:
     def __init__(self, *valores):
         self.__elementos = Lista()

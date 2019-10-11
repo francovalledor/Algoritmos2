@@ -404,7 +404,7 @@ class Lista:
             self.__previous_actual = self.__ultimo__
 
         if self.__previous_actual == self.frente:
-            if self.__previous_actual = None
+            self.__previous_actual = None
             raise StopIteration
         else:
             retorno = self.__previous_actual.data

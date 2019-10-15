@@ -6,11 +6,15 @@ from time import sleep
 from lista_circular import Lista as lc
 
 # ej1
+
+
 def contar_cantidad_nodos(lista: Lista):
     """Cuenta la cantidad de nodos de una lista"""
     return len(lista)
 
 # ej2
+
+
 def eliminar_vocales_lista(caracteres: Lista):
     VOCALES = 'AEIOUaeiou'
     i = 0
@@ -22,6 +26,8 @@ def eliminar_vocales_lista(caracteres: Lista):
         # Existe una manera mas eficiente de hacerlo trabajando a bajo nivel
 
 # ej3
+
+
 def dividir_pares_impares(numeros_enteros: Lista):
     pares = Lista()
     impares = Lista()
@@ -34,6 +40,8 @@ def dividir_pares_impares(numeros_enteros: Lista):
     return pares, impares
 
 # ej4
+
+
 def inserta_en_iesima(elemento, posicion, lista: Lista):
     lista.insert(elemento, posicion)
 
@@ -68,6 +76,8 @@ def eliminar_primos(numeros_enteros: Lista):
             i += 1
 
 # ej6
+
+
 class SuperHeroe:
     def __init__(self, nombre, anio_aparicion, casa, biografia):
         self.nombre = nombre
@@ -98,6 +108,8 @@ def ej6(superheroes: Lista):
                 i += 1
 
 # ej7
+
+
 def concatenar_listas(lista1: Lista, lista2: Lista, omitir_repetidos=False):
     if omitir_repetidos:
         i = 0
@@ -332,7 +344,7 @@ def promedio_pokemones(entrenador):
     else:
         promedio = 0
     print('\nEntrenador: %s \nPromedio: %.2f' %
-            (entrenador.nombre, promedio))
+          (entrenador.nombre, promedio))
 
 
 def cuantos_entrenadores_lo_tienen(pokemon, entrenadores):
@@ -390,4 +402,60 @@ def mostrar_pokemones_repetidos(entrenadores):
 # #14.h
 # print('\nEntrenadores que tienen Pokémons repetidos:')
 # mostrar_pokemones_repetidos(entrenadores)
+
+
+# EJ15
+def tiempo_promedio_actividades(proyecto):
+    if len(proyecto) > 0:
+        suma = 0
+        for actividad in proyecto:
+            suma += actividad.tiempo_estimado
+
+        promedio = suma / len(proyecto)
+    else:
+        promedio = 0
+
+    return promedio
+
+
+def costo_total(proyecto):
+    suma = 0
+    for actividad in proyecto:
+        suma += actividad.costo
+
+    return suma
+
+
+def actividades_a_cargo_de(persona, proyecto):
+    for actividad in proyecto:
+        if actividad.persona_a_cargo == persona:
+            print(actividad)
+
+
+def actividades_entre_fechas(proyecto, fecha_inicial, fecha_final):
+    for actividad in proyecto:
+        if actividad.fecha_inicio >= fecha_inicial:
+            if actividad.fecha_inicio <= fecha_final:
+                print(actividad)
+
+# ##Datos de prueba
+# from actividad_proyecto_data import proyecto, personas
+
+# #15.a
+# promedio = tiempo_promedio_actividades(proyecto)
+# print('\nTiempo promedio de actividades: {} dias'.format(promedio))
+# #15.b
+# total = costo_total(proyecto)
+# print('\nCosto total del proyecto ${}'.format(total))
+# #15.c
+# print('\nActividades realizadas por {}'.format(personas[0].nombre_completo))
+# actividades_a_cargo_de(personas[0], proyecto)
+
+# #15.d
+# print('\nActividades entre 1-ene-2019 y 1-jul-2019')
+# import datetime
+# fecha_inicial = datetime.date(2019, 1, 1)
+# fecha_final = datetime.date(2019, 7, 1)
+# actividades_entre_fechas(proyecto, fecha_inicial, fecha_final)
+
 

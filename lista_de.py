@@ -4,7 +4,6 @@ Implementación del TDA según
 
 """
 
-
 class Nodo:
     def __init__(self, data=None, anterior=None, siguiente=None):
         self.data = data

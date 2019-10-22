@@ -431,3 +431,30 @@ class Lista:
                     i += 1
                     actual = siguiente
                     siguiente = siguiente.siguiente
+
+    def sort_func(self, func):
+        """
+        Ordena la lista de acuerdo a una funcion "func(actual, siguiente)"
+
+        func(actual, siguiente) -> True si actual > siguiente
+        func(actual, siguiente) -> False si actual <= siguiente
+        """
+        def intercambiar(este, este_otro):
+            return(este_otro, este)
+
+        if len(self) > 1:
+            hubo_cambios = True
+            while hubo_cambios:
+                hubo_cambios = False
+                i = 1
+                actual = self.frente.siguiente
+                siguiente = actual.siguiente
+                while i < len(self):
+
+                    if func(actual.data, siguiente.data):
+                        (actual.data, siguiente.data) = intercambiar(actual.data, siguiente.data)
+                        hubo_cambios = True
+
+                    i += 1
+                    actual = siguiente
+                    siguiente = siguiente.siguiente

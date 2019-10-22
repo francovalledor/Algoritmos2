@@ -61,7 +61,7 @@ class Lista:
         self.actual = self.actual.siguiente
     
     def retroceder(self):
-        self.actual = self.actual.siguiente
+        self.actual = self.actual.anterior
 
 
     def __iter__(self):

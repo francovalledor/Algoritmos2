@@ -459,3 +459,355 @@ def actividades_entre_fechas(proyecto, fecha_inicial, fecha_final):
 # actividades_entre_fechas(proyecto, fecha_inicial, fecha_final)
 
 
+
+#ej16
+def filtrar_por_destino(destino, vuelos):
+    destino = destino.upper()
+    for vuelo in vuelos:
+        if vuelo.destino.upper() == destino:
+            print(vuelo)
+
+def asientos_turista_disponibles(vuelos):
+    for vuelo in vuelos:
+        if vuelo.cant_turista_disponibles() > 0:
+            print('Vuelo {:^8} Destino: {:26.24} Disponibles: {}'.format(vuelo.nro_vuelo, vuelo.destino, vuelo.cant_turista_disponibles()))
+
+def filtrar_por_fechas(fecha_inicial, fecha_final, vuelos):
+    for vuelo in vuelos:
+        if fecha_inicial <= vuelo.fecha:
+            if vuelo.fecha <= fecha_final:
+                print(vuelo)
+
+def vender_pasaje_turista(persona, vuelo):
+    nro_asiento = vuelo.vender_turista(persona)
+    print('Total a pagar: ${}'.format(vuelo.precio_turista))
+    print('Nro Asiento: {}'.format(nro_asiento))
+
+def eliminar_vuelo(indice, vuelos):
+    vuelos[indice].cancelar()
+    del vuelos[indice]
+
+
+#DATOS DE PRUEBA
+# from aeropuerto_data import vuelos
+# import datetime
+
+# #16.a
+# print('Filtrar vuelos a Atenas')
+# filtrar_por_destino('Atenas', vuelos)
+
+# #16.b
+# print('Filtrar vuelos con asientos turistas disponibles')
+# asientos_turista_disponibles(vuelos)
+
+# #16.c
+# #Se muestra al imprimir cada vuelo
+
+# #16.d
+# hoy = datetime.date.today()
+# fecha_inicial =  datetime.datetime(hoy.year, hoy.month, hoy.day)
+# fecha_final = fecha_inicial + datetime.timedelta(days=2) 
+# print('Vuelos entre fechas')
+# filtrar_por_fechas(fecha_inicial, fecha_final, vuelos)
+
+# #16.e
+# print('Vender un pasaje turista para JUAN PEREZ')
+# vender_pasaje_turista('Juan Perez', vuelos[0])
+
+# #16.f
+# print('Eliminar un vuelo')
+# print(vuelos[0])
+# eliminar_vuelo(0, vuelos)
+
+#ej17
+def buscar_por_codigo(codigo, listado_local):
+    """ Devuelve el producto o None"""
+    retorno = None
+    for producto in listado_local:
+        if producto.codigo == codigo:
+            retorno = producto
+            break
+    return retorno
+
+def agregar_productos(productos_nuevos, listado_local):
+    for producto in productos_nuevos:
+        codigo = producto.codigo
+        producto_en_local = buscar_por_codigo(codigo, listado_local)
+        if (producto_en_local == None):
+            listado_local.append(producto)
+        else:
+            producto_en_local.cantidad_stock += producto.cantidad_stock 
+
+def eliminar_por_tipo_y_marca(tipo, marca, listado_local):
+    tipo = tipo.upper()
+    marca = marca.upper()
+    i = 0
+    while i < len(listado_local):
+        if listado_local[i].tipo.upper() == tipo:
+            if listado_local[i].marca.upper() == marca:
+                print('eliminando: ')
+                print(listado_local[i])
+                del listado_local[i]
+                continue
+        i += 1
+
+def intercambiar(a, b):
+    return (b, a)
+
+def ordenar_por_tipo_y_marca(listado_local):
+    def func(actual, siguiente):
+        return (actual.tipo + actual.marca) > (siguiente.tipo + siguiente.marca)
+    listado_local.sort_func(func)
+
+def ordenar_por_marca_y_tipo(listado_local):
+    def func(actual, siguiente):
+        return (actual.marca + actual.tipo) > (siguiente.marca + siguiente.tipo)
+    listado_local.sort_func(func)
+
+def costo_de_existencia_por_tipo(tipo, listado_local):
+    tipo = tipo.upper()
+    total = 0
+    for producto in listado_local:
+        if tipo in producto.tipo.upper():
+            total += producto.precio * producto.cantidad_stock
+    return total
+
+##DATOS DE PRUEBA
+# from localdata import productos as listado_local
+# from localdata import Producto, proveedorA, proveedorB
+# #17.a
+# # Agregar productos de proveedores A y B
+# agregar_productos(proveedorA, listado_local)
+# agregar_productos(proveedorB, listado_local)
+# for producto in listado_local:
+#     print(producto)
+
+# #17.b
+# # Eliminar todos los productos de tipo "PEN DRIVE" y marca "KINGSTON"
+# eliminar_por_tipo_y_marca('PEN DRIVE', 'KINGSTON', listado_local)
+
+#17.c
+# Ordenar por tipo y marca
+# ordenar_por_marca_y_tipo(listado_local)
+# for producto in listado_local:
+#     print('{:20.18} {:15.14} {:40.40}'.format(producto.tipo, producto.marca, producto.modelo))
+
+# print('-'*80)
+# ordenar_por_tipo_y_marca(listado_local)
+# for producto in listado_local:
+#     print('{:20.18} {:15.14} {:40.40}'.format(producto.tipo, producto.marca, producto.modelo))
+
+#17.d
+#Obtener costo de existencia de "DISCO SOLIDO" y de "TECLADO WIRELESS"
+# print(costo_de_existencia_por_tipo('DISCO SOLIDO', listado_local))
+# print(costo_de_existencia_por_tipo('TECLADO WIRELESS', listado_local))
+
+
+
+#ej18
+def usuario_mas_commits(usuarios):
+    mayor = usuarios[0]
+    for usuario in usuarios:
+        if usuario.cant_commits() > mayor.cant_commits():
+            mayor = usuario
+
+    lista_mayores = Lista()
+    for usuario in usuarios:
+        if usuario.cant_commits() == mayor.cant_commits():
+            lista_mayores.append(usuario)
+        
+    return lista_mayores
+
+
+def usuario_mas_lineas_agregadas(usuarios):
+    mayor = usuarios[0]
+    for usuario in usuarios:
+        if usuario.cant_lineas_agregadas() > mayor.cant_lineas_agregadas():
+            mayor = usuario
+    
+    return mayor
+
+
+def usuario_menos_lineas_eliminadas(usuarios):
+    menor = usuarios[0]
+    for usuario in usuarios:
+        if usuario.cant_lineas_eliminadas() < menor.cant_lineas_eliminadas():
+            menor = usuario
+    
+    return menor
+
+
+def usuarios_commit_cero_lineas(usuarios):
+    lista_cero_lineas = Lista()
+    for usuario in usuarios:
+        for commit in usuario.commits:
+            if commit.agregadas == 0:
+                if commit.eliminadas == 0:
+                    lista_cero_lineas.append(usuario)
+                    break
+    
+    return lista_cero_lineas
+
+
+def cambios_archivo_entre_fechas(archivo, fecha_inicial, fecha_final, usuarios):
+    usuarios_cambios = Lista()
+    for usuario in usuarios:
+        for commit in usuario.commits:
+            if commit.nombre_archivo == archivo:
+                if  commit.timestamp >= fecha_inicial:
+                    if  commit.timestamp <= fecha_final:
+                        usuarios_cambios.append(usuario)
+                        break
+
+    return usuarios_cambios
+
+
+#DATOS DE PRUEBA
+# from commitdata import usuarios
+# import datetime
+# #18.a
+# #Obtener el usuario con mayor cantidad de commits (podría ser más de uno).
+# mas_commits = usuario_mas_commits(usuarios)
+# for usuario in mas_commits:
+#     print(usuario)
+
+# # 18.b
+# # Obtener el usuario que haya agregado mayor cantidad de líneas y el que haya 
+# # eliminado menor cantidad de líneas.
+# usuario = usuario_mas_lineas_agregadas(usuarios)
+# print(usuario)
+# print('{} lineas agregadas'.format(usuario.cant_lineas_agregadas()))
+
+# usuario = usuario_menos_lineas_eliminadas(usuarios)
+# print(usuario)
+# print('{} lineas eliminadas'.format(usuario.cant_lineas_eliminadas()))
+
+
+# #18.c
+# #Los usuarios que realizaron cambios sobre el archivo “Test.py” despues de las
+# #“19:45”.
+# hoy = datetime.date.today()
+# fecha_inicial =  datetime.datetime(hoy.year, hoy.month, hoy.day, 19, 45)
+# fecha_final = fecha_inicial + datetime.timedelta(days=2)
+# archivo = 'Test.py'
+
+# listado = cambios_archivo_entre_fechas(archivo, fecha_inicial, fecha_final, usuarios)
+# for usuario in listado:
+#     print(usuario)
+
+# #18.d
+# #Los usuarios que hayan realizado al menos un commit con cero líneas
+# #agregados/eliminadas.
+# listado = usuarios_commit_cero_lineas(usuarios)
+# for usuario in listado:
+#     print(usuario)
+#     # for commit in usuario.commits:
+#     #     print(commit)
+
+
+
+#ej19
+def palindromo_lista_circular(palabra):
+    lista1 = lc()
+    lista2 = lc()
+    palabra = palabra.upper()
+    for letra in palabra:
+        lista1.insert(letra)
+        lista2.insert(letra)
+    
+    es_palindromo = True
+    lista2.retroceder()
+    for i in range(0,len(lista1)):
+        if lista1.actual.data != lista2.actual.data:
+            es_palindromo = False
+            break
+        lista1.avanzar()
+        lista2.retroceder()
+
+    return es_palindromo
+
+# #DATOS DE PRUEBA
+# palabras = Lista('menem', 'neuqUen', 'telefono', 'ana', 'anana', 'nana')
+
+# for palabra in palabras:
+#     print(palindromo_lista_circular(palabra))
+
+
+
+#EJ 20
+def ordenar_por_nombre(productos):
+    def func(actual, siguiente):
+        retorno = False
+        if actual.nombre > siguiente.nombre:
+            retorno = True
+        return retorno
+
+    productos.sort_func(func)
+
+
+def ordenar_por_calificacion(productos):
+    def func(actual, siguiente):
+        retorno = False
+        if actual.calificacion > siguiente.calificacion:
+            retorno = True
+        return retorno
+
+    productos.sort_func(func)
+
+
+def separar_por_calificacion(productos):
+    clasificados = Lista()
+    max_calificacion = 5
+    for i in range(0, max_calificacion+1):
+        clasificados.append(Lista())
+
+    for producto in productos:
+        clasificados[producto.calificacion].append(producto)
+
+    return clasificados
+
+
+def producto_mas_barato(productos):
+    menor_precio = productos[0]
+    for producto in productos:
+        if producto.precio < menor_precio.precio:
+            menor_precio = producto
+    
+    return menor_precio
+
+
+def filtrar_por_inicial(inicial, productos):
+    inicial = inicial.upper()
+    for producto in productos:
+        if producto.nombre[0].upper() == inicial:
+            print(producto)
+
+# #DATOS DE PRUEBA
+# from productos_data import productos
+
+# #20.a
+# #Mostrar los datos de un determinado producto.
+# print(productos[0])
+
+# #20.b
+# #Poder cambiar el orden de los elementos de la lista por nombre o calificación.
+# ordenar_por_nombre(productos)
+# for producto in productos:
+#     print(producto)
+
+# ordenar_por_calificacion(productos)
+# for producto in productos:
+#     print(producto)
+
+# #20.c
+# #Mostrar un listado ordenado por clasificación de producto (debe utilizar una lista
+# #auxiliar).
+# clasificados = separar_por_calificacion(productos)
+# for producto in clasificados[3]: #3 estrellas
+#     print(producto)
+
+# #20.d
+# #Mostrar el producto más barato de calificación 3.
+# clasificados = separar_por_calificacion(productos)
+# mas_barato = producto_mas_barato(clasificados[3])
+# print(mas_barato)

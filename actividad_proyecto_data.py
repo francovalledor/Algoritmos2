@@ -45,11 +45,11 @@ personas.append(Persona('MARÍA ROSARIO', 23749384))
 personas.append(Persona('ALBERTO OSCAR', 25928472))
 
 
-fecha = datetime.date(2019,1,1)
+fecha = datetime.datetime(2019,10,15)
 fechas = Lista()
 fechas.append(fecha)
-for i in range(1,365):
-    fecha += datetime.timedelta(days=1)
+for i in range(1,90*24):
+    fecha += datetime.timedelta(hours=1)
     fechas.append(fecha)
 
 nombres_actividades = Lista()
